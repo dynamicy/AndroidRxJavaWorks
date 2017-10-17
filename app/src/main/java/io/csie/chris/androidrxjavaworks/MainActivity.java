@@ -6,8 +6,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -34,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+//        createObservableObj();
 
 //        sayHelloToTheWorld();
 
@@ -70,26 +70,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    @SuppressWarnings("MethodMayBeStatic")
+    private void createObservableObj() {
+        // Observable.just(...), Create an Observale
+        Observable.just("Apple");                   //Create an Observable that has only one item: "Apple"
+        Observable.just("Apple", "Banana");         //Create an Observable that has 2 items: "Apple" and "Banana"
+        Observable.just("Apple", "Banana", "Car");  //Create an Observable that has 3 items: "Apple", "Banana" and "Car"
+        //...you can pass in up to 10 items
     }
 
     @SuppressWarnings("MethodMayBeStatic")
