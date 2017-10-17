@@ -12,6 +12,9 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
 //        createObservableObj();
 
 //        createObservableFrom();
+
+//        createObservable();
 
 //        sayHelloToTheWorld();
 
@@ -73,6 +78,29 @@ public class MainActivity extends AppCompatActivity {
                 .sequential()
                 .blockingSubscribe(System.out::println);
 
+    }
+
+    @SuppressWarnings("MethodMayBeStatic")
+    private void createObservable() {
+
+        // With lambda
+        Observable.create((ObservableOnSubscribe<String>) observableEmitter -> {
+            observableEmitter.onNext("Apple");  //你想要给最终的Subscriber通知什么数据，就在这里调用subscriber的onNext
+            observableEmitter.onNext("Banana");
+            observableEmitter.onNext("Car");
+            observableEmitter.onComplete();
+        }); //Create an Observable that emit 3 Strings: "Apple", "Banana" and "Car"
+
+        // Without lambda
+        Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> observableEmitter) throws Exception {
+                observableEmitter.onNext("Apple");  //你想要给最终的Subscriber通知什么数据，就在这里调用subscriber的onNext
+                observableEmitter.onNext("Banana");
+                observableEmitter.onNext("Car");
+                observableEmitter.onComplete();
+            }
+        }); //Create an Observable that emit 3 Strings: "Apple", "Banana" and "Car"
     }
 
     @SuppressWarnings("MethodMayBeStatic")
