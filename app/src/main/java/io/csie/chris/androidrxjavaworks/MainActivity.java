@@ -7,6 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
 //        createObservableObj();
+
+//        createObservableFrom();
 
 //        sayHelloToTheWorld();
 
@@ -68,6 +73,19 @@ public class MainActivity extends AppCompatActivity {
                 .sequential()
                 .blockingSubscribe(System.out::println);
 
+    }
+
+    @SuppressWarnings("MethodMayBeStatic")
+    private void createObservableFrom() {
+
+        //  Observable.fromArray(an_array_or_iterable);
+        Observable.fromArray("Apple", "Banana", "Car");  //Create an Observable that get data from an array
+
+        List<String> items = new ArrayList<>();
+        items.add("Apple");
+        items.add("Banana");
+        items.add("Car");
+        Observable.fromArray(items);  //Create an Observable that get data from the List "items"
     }
 
     @SuppressWarnings("MethodMayBeStatic")
