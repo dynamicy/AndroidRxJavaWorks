@@ -39,6 +39,40 @@ public class MainActivity extends AppCompatActivity {
 
 //        asyncExample();
 
+//        foregroundBackgroundCase();
+
+        Flowable.range(1, 10)
+                .observeOn(Schedulers.computation())
+                .map(v -> v * v)        // 1,4,9,16,25,36,49,64,81,100
+                .map(v -> v * v * v)    // 1^3,4^3 ..., 100^3
+                .blockingSubscribe(System.out::println);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("MethodMayBeStatic")
+    private void foregroundBackgroundCase() {
         // 1->4->5->6->7->2->3->Done->8
         Log.d(TAG, "fromCallable: 1");
         Flowable<String> source = Flowable.fromCallable(() -> {
@@ -69,28 +103,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.d(TAG, "fromCallable: 8");
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("MethodMayBeStatic")
