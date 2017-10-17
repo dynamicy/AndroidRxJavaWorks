@@ -41,10 +41,21 @@ public class MainActivity extends AppCompatActivity {
 
 //        foregroundBackgroundCase();
 
+        // Sequential
         Flowable.range(1, 10)
                 .observeOn(Schedulers.computation())
-                .map(v -> v * v)        // 1,4,9,16,25,36,49,64,81,100
-                .map(v -> v * v * v)    // 1^3,4^3 ..., 100^3
+                .map(v -> v + "=>" + v * v)        // 1,4,9,16,25,36,49,64,81,100
+                .blockingSubscribe(System.out::println);
+
+        System.out.println("================");
+
+        // Non-sequential
+        Flowable.range(1, 10)
+                .flatMap(v ->
+                        Flowable.just(v)
+                                .subscribeOn(Schedulers.computation())
+                                .map(w -> w + "=>" + w * w)
+                )
                 .blockingSubscribe(System.out::println);
 
     }
