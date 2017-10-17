@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -28,13 +27,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
     }
 
     @Override
@@ -43,24 +37,38 @@ public class MainActivity extends AppCompatActivity {
 
 //        sayHelloToTheWorld();
 
-        // 3->1->2->Done->4
-        Flowable.fromCallable(() -> {
-            Log.d(TAG, "fromCallable: 1");
-            Thread.sleep(2000); //  imitate expensive computation
-            Log.d(TAG, "fromCallable: 2");
-            return "Done";
-        }).subscribeOn(Schedulers.io()).observeOn(Schedulers.single())
-                .subscribe(System.out::println, Throwable::printStackTrace);
+//        asyncExample();
 
-        Log.d(TAG, "fromCallable: 3");
+        // 1->4->5->6->7->2->3->Done->8
+        Log.d(TAG, "fromCallable: 1");
+        Flowable<String> source = Flowable.fromCallable(() -> {
+            Log.d(TAG, "fromCallable: 2");
+            Thread.sleep(1000); //  imitate expensive computation
+            Log.d(TAG, "fromCallable: 3");
+            return "Done";
+        });
+
+        Log.d(TAG, "fromCallable: 4");
+
+        Flowable<String> runBackground = source.subscribeOn(Schedulers.io());
+
+        Log.d(TAG, "fromCallable: 5");
+
+        Flowable<String> showForeground = runBackground.observeOn(Schedulers.single());
+
+        Log.d(TAG, "fromCallable: 6");
+
+        showForeground.subscribe(System.out::println, Throwable::printStackTrace);
+
+        Log.d(TAG, "fromCallable: 7");
 
         try {
-            Thread.sleep(10000); // <--- wait for the flow to finish
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        Log.d(TAG, "fromCallable: 4");
+        Log.d(TAG, "fromCallable: 8");
     }
 
     @Override
@@ -83,6 +91,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("MethodMayBeStatic")
+    private void asyncExample() {
+        // 3->1->2->Done->4
+        Flowable.fromCallable(() -> {
+            Log.d(TAG, "fromCallable: 1");
+            Thread.sleep(2000); //  imitate expensive computation
+            Log.d(TAG, "fromCallable: 2");
+            return "Done";
+        }).subscribeOn(Schedulers.io()).observeOn(Schedulers.single())
+                .subscribe(System.out::println, Throwable::printStackTrace);
+
+        Log.d(TAG, "fromCallable: 3");
+
+        try {
+            Thread.sleep(10000); // <--- wait for the flow to finish
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, "fromCallable: 4");
     }
 
     @SuppressWarnings("MethodMayBeStatic")
