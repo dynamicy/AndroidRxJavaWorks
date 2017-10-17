@@ -58,6 +58,16 @@ public class MainActivity extends AppCompatActivity {
                 )
                 .blockingSubscribe(System.out::println);
 
+        System.out.println("================");
+
+        // Non-sequential
+        Flowable.range(1, 10)
+                .parallel()
+                .runOn(Schedulers.computation())
+                .map(v -> v + "=>" + v * v)
+                .sequential()
+                .blockingSubscribe(System.out::println);
+
     }
 
     @Override
